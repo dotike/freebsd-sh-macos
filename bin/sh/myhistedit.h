@@ -32,20 +32,16 @@
  * $FreeBSD$
  */
 
-#ifndef NO_HISTORY
 #include <histedit.h>
 
 extern History *hist;
 extern EditLine *el;
 extern int displayhist;
 
-#ifdef __FreeBSD__
-#include <filecomplete.h>
-#endif
+#include "filecomplete.h"
 
 void histedit(void);
 void sethistsize(const char *);
 void setterm(const char *);
 void histload(void);
 void histsave(void);
-#endif /* NO_HISTORY */
