@@ -8,7 +8,8 @@ TESTDIR=	bin/test
 PRINTFDIR=	usr.bin/printf
 OBJDIR=		obj
 
-PREFIX?=	/usr/local
+# until further notice, this port is experimental:
+PREFIX?=	$(HOME)
 LIBEDIT_PREFIX?= /opt/homebrew/opt/libedit
 
 CC?=	cc
