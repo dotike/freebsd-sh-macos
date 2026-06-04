@@ -19,19 +19,23 @@ via `-e`, not the default.
 
 ## Build
 
+    brew install libedit
     make
-    ./freebsd-sh
+    make install
 
-Requires Xcode Command Line Tools.  No other dependencies.
+Requires Xcode Command Line Tools and Homebrew libedit.
+Default install prefix is `~/bin`.
 
+<!--
 ## Install via Homebrew
 
     brew tap dotike/freebsd-sh-macos
     brew install freebsd-sh
+-->
 
 ## Test
 
-    $ ./freebsd-sh -c 'echo "hello\nworld"'
+    $ fsh -c 'echo "hello\nworld"'
     hello\nworld
 
 Compare with zsh:
@@ -44,8 +48,8 @@ Compare with zsh:
 
 Shell source from FreeBSD main (February 2023 snapshot),
 directory layout follows upstream.  A small compat.h provides
-Darwin shims.  Built with `-DNO_HISTORY` (no libedit
-dependency).
+Darwin shims.  Linked against Homebrew libedit for
+line editing, history, and tab completion.
 
 ## License
 
