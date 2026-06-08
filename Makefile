@@ -43,6 +43,9 @@ OBJS=	$(SHOBJS) $(GENOBJS) $(BLTINOBJS) $(EXTOBJS)
 
 PROG=	fsh
 
+# Generated headers — must exist before any .o compiles.
+GENHDRS= $(SHDIR)/builtins.h $(SHDIR)/nodes.h $(SHDIR)/syntax.h $(SHDIR)/token.h
+
 all: $(OBJDIR) generate $(OBJDIR)/$(PROG)
 
 $(OBJDIR):
@@ -50,6 +53,9 @@ $(OBJDIR):
 
 $(OBJDIR)/$(PROG): $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS)
+
+# All objects depend on generated headers (parallel-safe).
+$(SHOBJS) $(GENOBJS) $(BLTINOBJS): $(GENHDRS)
 
 $(SHOBJS): $(OBJDIR)/%.o: $(SHDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
