@@ -5,8 +5,8 @@ class Fsh < Formula
   sha256 "aafd630a6c100334bad1a55eb81abb5d0ec05168e213b1948eb5be22ce7187fe"
   license "BSD-2-Clause"
 
-  depends_on :macos
   depends_on "libedit"
+  depends_on :macos
 
   def install
     system "make", "LIBEDIT_PREFIX=#{Formula["libedit"].opt_prefix}",
