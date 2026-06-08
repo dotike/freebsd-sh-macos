@@ -55,7 +55,7 @@ $(OBJDIR)/$(PROG): $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 
 # All objects depend on generated headers (parallel-safe).
-$(SHOBJS) $(GENOBJS) $(BLTINOBJS): $(GENHDRS)
+$(SHOBJS) $(GENOBJS) $(BLTINOBJS) $(EXTOBJS): $(GENHDRS)
 
 $(SHOBJS): $(OBJDIR)/%.o: $(SHDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -76,26 +76,37 @@ $(OBJDIR)/ext_printf.o: $(PRINTFDIR)/printf.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # --- generated sources ---
+# Stamp files ensure each generator runs exactly once under -j8.
 
-generate: $(SHDIR)/builtins.c $(SHDIR)/nodes.c $(SHDIR)/syntax.c $(SHDIR)/token.h
+generate: .stamp-builtins .stamp-nodes .stamp-syntax .stamp-token
 
-$(SHDIR)/builtins.c $(SHDIR)/builtins.h: $(SHDIR)/mkbuiltins $(SHDIR)/builtins.def
+.stamp-builtins: $(SHDIR)/mkbuiltins $(SHDIR)/builtins.def
 	cd $(SHDIR) && sh mkbuiltins .
+	@touch $@
 
-$(SHDIR)/token.h: $(SHDIR)/mktokens
+.stamp-token: $(SHDIR)/mktokens
 	cd $(SHDIR) && sh mktokens
+	@touch $@
 
 $(SHDIR)/mksyntax: $(SHDIR)/mksyntax.c
 	$(CC) -o $@ $<
 
-$(SHDIR)/syntax.c $(SHDIR)/syntax.h: $(SHDIR)/mksyntax
+.stamp-syntax: $(SHDIR)/mksyntax
 	cd $(SHDIR) && ./mksyntax
+	@touch $@
 
 $(SHDIR)/mknodes: $(SHDIR)/mknodes.c
 	$(CC) -o $@ $<
 
-$(SHDIR)/nodes.c $(SHDIR)/nodes.h: $(SHDIR)/mknodes $(SHDIR)/nodetypes $(SHDIR)/nodes.c.pat
+.stamp-nodes: $(SHDIR)/mknodes $(SHDIR)/nodetypes $(SHDIR)/nodes.c.pat
 	cd $(SHDIR) && ./mknodes nodetypes nodes.c.pat
+	@touch $@
+
+# Generated headers depend on stamps.
+$(SHDIR)/builtins.h $(SHDIR)/builtins.c: .stamp-builtins
+$(SHDIR)/nodes.h $(SHDIR)/nodes.c: .stamp-nodes
+$(SHDIR)/syntax.h $(SHDIR)/syntax.c: .stamp-syntax
+$(SHDIR)/token.h: .stamp-token
 
 # --- install ---
 
@@ -114,5 +125,6 @@ clean:
 	rm -f $(SHDIR)/nodes.c $(SHDIR)/nodes.h
 	rm -f $(SHDIR)/syntax.c $(SHDIR)/syntax.h
 	rm -f $(SHDIR)/token.h
+	rm -f .stamp-builtins .stamp-nodes .stamp-syntax .stamp-token
 
 .PHONY: all clean generate install

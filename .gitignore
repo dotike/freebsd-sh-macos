@@ -11,3 +11,4 @@ bin/sh/builtins.[ch]
 bin/sh/nodes.[ch]
 bin/sh/syntax.[ch]
 bin/sh/token.h
+.stamp-*
