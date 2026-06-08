@@ -2,7 +2,7 @@ class Fsh < Formula
   desc "FreeBSD sh(1) ported to macOS — Bourne-lineage shell with faithful echo"
   homepage "https://github.com/dotike/freebsd-sh-macos"
   url "file:///tmp/fsh-0.2.0.tar.gz"
-  sha256 "a80ac41c86ed0eca1737c57c3c2e98366511522883a05b018461fb681f89bb5b"
+  sha256 "96e33eed808a07bb076fe4c7c19257d27e043ce37b348413bb3932929f8ddefe"
   license "BSD-2-Clause"
 
   depends_on "libedit"
