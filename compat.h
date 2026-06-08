@@ -20,24 +20,25 @@
 #define eaccess(path, mode) access(path, mode)
 #endif
 
-/* macOS lacks strchrnul(3). */
-#ifdef __APPLE__
+/* strchrnul: provided by macOS 26+, absent before. */
+#if defined(__APPLE__) && !defined(HAVE_STRCHRNUL)
 #include <string.h>
 static inline char *
-strchrnul(const char *s, int c)
+compat_strchrnul(const char *s, int c)
 {
 	while (*s != '\0' && *s != (char)c)
 		s++;
 	return ((char *)s);
 }
+#define strchrnul compat_strchrnul
 #endif
 
-/* macOS lacks reallocarray(3). */
-#ifdef __APPLE__
+/* reallocarray: provided by macOS 26+, absent before. */
+#if defined(__APPLE__) && !defined(HAVE_REALLOCARRAY)
 #include <stdlib.h>
 #include <errno.h>
 static inline void *
-reallocarray(void *ptr, size_t nmemb, size_t size)
+compat_reallocarray(void *ptr, size_t nmemb, size_t size)
 {
 	if (size != 0 && nmemb > (size_t)-1 / size) {
 		errno = ENOMEM;
@@ -45,6 +46,7 @@ reallocarray(void *ptr, size_t nmemb, size_t size)
 	}
 	return realloc(ptr, nmemb * size);
 }
+#define reallocarray compat_reallocarray
 #endif
 
 /* macOS uses NSIG; FreeBSD uses sys_nsig. */

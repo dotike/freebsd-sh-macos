@@ -13,7 +13,14 @@ PREFIX?=	$(HOME)
 LIBEDIT_PREFIX?= /opt/homebrew/opt/libedit
 
 CC?=	cc
-CFLAGS=	-DSHELL \
+
+# Detect functions the system already provides.
+COMPAT_DEFS := $(shell echo 'int main(){char *p = strchrnul("x",0);return 0;}' | \
+	$(CC) -x c -include string.h -o /dev/null - 2>/dev/null && echo -DHAVE_STRCHRNUL)
+COMPAT_DEFS += $(shell echo 'int main(){void *p = reallocarray(0,1,1);return 0;}' | \
+	$(CC) -x c -include stdlib.h -o /dev/null - 2>/dev/null && echo -DHAVE_REALLOCARRAY)
+
+CFLAGS=	-DSHELL $(COMPAT_DEFS) \
 	-I$(SHDIR) -I$(BLTINDIR) -I. -Icontrib/libedit \
 	-I$(LIBEDIT_PREFIX)/include \
 	-Wno-deprecated-declarations \
