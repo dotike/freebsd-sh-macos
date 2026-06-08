@@ -37,7 +37,7 @@
 .Os
 .Sh NAME
 .Nm fsh
-.Nd command interpreter (shell)
+.Nd the FreeBSD command interpreter (shell)
 .Sh SYNOPSIS
 .Nm
 .Op Fl /+abCEefhIimnPpTuVvx
@@ -2901,25 +2901,35 @@ will return the argument.
 .Xr shells 5
 .Sh HISTORY
 A
-.Nm
+.Ic sh
 command, the Thompson shell, appeared in
 .At v1 .
 It was superseded in
 .At v7
 by the Bourne shell, which inherited the name
-.Nm .
+.Ic sh .
 .Pp
-This version of
-.Nm
-was rewritten in 1989 under the
+This version was rewritten in 1989 under the
 .Bx
 license after the Bourne shell from
 .At V.4 .
-.Sh AUTHORS
-This version of
+.Pp
 .Nm
+is a macOS port of FreeBSD
+.Ic sh ,
+built with a portability shim for Darwin.
+.Sh AUTHORS
+FreeBSD
+.Ic sh
 was originally written by
 .An Kenneth Almquist .
+.Pp
+The
+.Nm
+macOS port by
+.An Isaac (.ike) Levy
+and
+.An G.R. Emlin .
 .Sh BUGS
 The
 .Nm
